@@ -21,14 +21,13 @@ def find_next(element):
         #Instance
         connectors = element.MEPModel.ConnectorManager.Connectors
         if element.Name == "start":
-            #print("START")
+            print("START")
             for connector in connectors:    
                 for ref in connector.AllRefs:
                     if str(type(ref.Owner)) == "<type 'Duct'>":
                         print(ref.Owner)
                         return find_next(ref.Owner)
         elif element.Name == "finish":
-            #print("finish")
             return 0
         else:
             for connector in connectors:    
@@ -46,7 +45,6 @@ def find_next(element):
                     return find_next(ref.Owner)
     except:
         pass
-
 
 fittings = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_DuctFitting).WhereElementIsNotElementType().ToElements()
 for fitting in fittings:
