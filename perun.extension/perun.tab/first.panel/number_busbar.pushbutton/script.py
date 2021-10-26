@@ -2,7 +2,7 @@
 from Autodesk.Revit.DB import FilteredElementCollector, BuiltInParameter, BuiltInCategory, Transaction
 import rpw
 
-__doc__ = """number busbar marking duct systems sequentially"""
+__doc__ = """Number busbar marking duct systems sequentially"""
 __title__ = "Number\nbusbar"
 __authors__ = ["Vlad Sozutov"]
 __highlight__ = 'new'
