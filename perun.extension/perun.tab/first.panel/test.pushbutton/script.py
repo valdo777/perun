@@ -2,9 +2,10 @@
 from math import pi, acos, trunc
 
 from Autodesk.Revit.DB import Line, ViewSection, XYZ, FilteredElementCollector, Grid, ReferencePlane, FamilyInstance, \
-    BuiltInParameter, ElevationMarker, ViewType
+    BuiltInParameter, ElevationMarker, ViewType, Transaction
 from Autodesk.Revit.UI.Selection import ObjectType
 from Autodesk.Revit import Exceptions
+from Autodesk.Revit.DB.Electrical import CableTray
 
 import rpw
 from pyrevit import forms, script
@@ -29,6 +30,11 @@ def element_selection():
 element = doc.GetElement(element_selection().ElementId)
 lc = element.Location.Curve
 
+typeCt = element.GetTypeId()
+levelId = element.ReferenceLevel.Id
+LevelOffset = element.LevelOffset
+width = element.Width
+height = element.Height
 
 #print( round(lc.GetEndPoint(1).GetLength()) )
 for connector in element.ConnectorManager.Connectors:
@@ -42,13 +48,37 @@ for connector in element.ConnectorManager.Connectors:
         pass
 
 v1 = element.Name.index("L=")
-b = int(element.Name[v1+2:v1+6:])
+lct = int(element.Name[v1+2:v1+6:])
+print(lc.Length * 304.8)
+print(lct)
 
-if lc.Length * 304.8 > b:
+if lc.Length * 304.8 > lct:
     #print(lc.Length * 304.8)
-    count = trunc(lc.Length / (b / 304.8))
+    count = trunc(lc.Length / (lct / 304.8))
     startP = lc.GetEndPoint(0)
     
+    listC = []
+    #t = Transaction(doc, "Добавление значений параметров для лотков")
+    #t.Start()
+    
+    for i in range(count - 1):
+        if i < count:
+            p1 = lc.Evaluate(0 + lct / (lc.Length * 304.8) * i, 1)
+            p2 = lc.Evaluate(lct / (lc.Length * 304.8) + lct / (lc.Length * 304.8) * i, 1)
+            ct = CableTray.Create(doc, typeCt, p1, p2, levelId)
+            ct.LevelOffset = LevelOffset
+            ct.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM).Set(width)
+            ct.get_Parameter(BuiltInParameter.RBS_CABLETRAY_HEIGHT_PARAM).Set(height)
+            
+        if i == count - 1:
+            p1 = lc.Evaluate(lct / (lc.Length * 304.8) + lct / (lc.Length * 304.8) * i, 1)
+            p2 = lc.Evaluate(1, 1)
+            ct = CableTray.Create(doc, typeCt, p1, p2, levelId)
+            ct.LevelOffset = LevelOffset
+            ct.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM).Set(width)
+            ct.get_Parameter(BuiltInParameter.RBS_CABLETRAY_HEIGHT_PARAM).Set(height)
+
+    #t.Commit()
 
 # try:
 #     v1 = element.Name.index("L=")
