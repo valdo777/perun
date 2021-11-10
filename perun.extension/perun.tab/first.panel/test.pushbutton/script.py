@@ -68,39 +68,6 @@ if lc.Length * 304.8 > lct:
     
     i = 0
     if element.LookupParameter("Смещение в начале").AsDouble() == element.LookupParameter("Смещение в конце").AsDouble():
-    
-        t = Transaction(doc, "Hor")
-        t.Start()
-        for i in range(i < count):
-            if i < count:
-                p1 = lc.Evaluate(0 + lct / (lc.Length * 304.8) * i, 1)
-                p2 = lc.Evaluate(lct / (lc.Length * 304.8) + lct / (lc.Length * 304.8) * i, 1)
-                ct = CableTray.Create(doc, typeCt, p1, p2, levelId)
-                ct.LevelOffset = LevelOffset
-                ct.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM).Set(width)
-                ct.get_Parameter(BuiltInParameter.RBS_CABLETRAY_HEIGHT_PARAM).Set(height)
-                print(str(p1) + "_" + str(p2))
-                #if round(ct.ConnectorManager.Connectors.Origin.GetLength()) == round(p1.GetLength()):
-                    #print(ct.ConnectorManager.Connectors.Origin.GetLength())
-                #listC.append()
-                #listC.append()
-                
-            if i == count - 1:
-                p1 = lc.Evaluate(lct / (lc.Length * 304.8) + lct / (lc.Length * 304.8) * i, 1)
-                p2 = lc.Evaluate(1, 1)
-                ct = CableTray.Create(doc, typeCt, p1, p2, levelId)
-                ct.LevelOffset = LevelOffset
-                ct.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM).Set(width)
-                ct.get_Parameter(BuiltInParameter.RBS_CABLETRAY_HEIGHT_PARAM).Set(height)
-                #listC.append()
-                #listC.append()
-            print(i)
-            i += 1
-
-        #for i in range(i < (listC.Count - 2) / 2):
-        t.Commit()
-    
-    else:
         t = Transaction(doc, "Vert")
         t.Start()
         for i in range(i < count):
@@ -112,7 +79,7 @@ if lc.Length * 304.8 > lct:
                 ct.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM).Set(width)
                 ct.get_Parameter(BuiltInParameter.RBS_CABLETRAY_HEIGHT_PARAM).Set(height)
                 print(str(p1) + "_" + str(p2))
-                
+
                 #listC.append()
                 #listC.append()
                 
@@ -129,30 +96,3 @@ if lc.Length * 304.8 > lct:
             print(i)
             i += 1
         t.Commit()
-
-# try:
-#     v1 = element.Name.index("L=")
-#     str2 = element.Name.Remove(0, v1 + 2)
-#     lct = 
-# except:
-#     pass
-
-# element = doc.GetElement(element_selection.ElementId)
-# if element is Duct:
-#     typeCt = element.GetTypeId()
-#     levelId = element.ReferenceLevel.Id
-    
-#     LevelOffset = element.LevelOffset
-#     width = element.Width
-#     height = element.Height
-
-#     Lc = element.Location.Curve
-
-#     conStart = 0
-#     conEnd = 0
-    
-#     for connector in element.ConnectorManager.Connectors:
-#         if round(connector.Origin.GetLength(), 5) == round(Lc.GetEndPoint(0).GetLength(), 5):
-#             for ref in connector.AllRefs:
-#                 if (ref.Owner is FamilyInstance):
-#                     conStart = ref
