@@ -41,16 +41,23 @@ for connector in element.ConnectorManager.Connectors:
     #print( str(round(connector.Origin.GetLength(), 5)) )
     if round(connector.Origin.GetLength()) == round(lc.GetEndPoint(0).GetLength()):
         #print("conStar = " + str(round(connector.Origin.GetLength(), 5)))
-        pass
+        for con_Child in connector.AllRefs:
+            conStart = con_Child
+            #print("conStart")
 
     elif round(connector.Origin.GetLength()) == round(lc.GetEndPoint(1).GetLength()):
         #print("conEnd = " + str(round(connector.Origin.GetLength(), 5)))
-        pass
+        for con_Child in connector.AllRefs:
+            conEnd = con_Child
+            #print("conEnd")
 
 v1 = element.Name.index("L=")
 lct = int(element.Name[v1+2:v1+6:])
 print(lc.Length * 304.8)
 print(lct)
+
+#print(conStart)
+#print(conEnd)
 
 if lc.Length * 304.8 > lct:
     #print(lc.Length * 304.8)
@@ -58,27 +65,70 @@ if lc.Length * 304.8 > lct:
     startP = lc.GetEndPoint(0)
     
     listC = []
-    #t = Transaction(doc, "Добавление значений параметров для лотков")
-    #t.Start()
     
-    for i in range(count - 1):
-        if i < count:
-            p1 = lc.Evaluate(0 + lct / (lc.Length * 304.8) * i, 1)
-            p2 = lc.Evaluate(lct / (lc.Length * 304.8) + lct / (lc.Length * 304.8) * i, 1)
-            ct = CableTray.Create(doc, typeCt, p1, p2, levelId)
-            ct.LevelOffset = LevelOffset
-            ct.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM).Set(width)
-            ct.get_Parameter(BuiltInParameter.RBS_CABLETRAY_HEIGHT_PARAM).Set(height)
-            
-        if i == count - 1:
-            p1 = lc.Evaluate(lct / (lc.Length * 304.8) + lct / (lc.Length * 304.8) * i, 1)
-            p2 = lc.Evaluate(1, 1)
-            ct = CableTray.Create(doc, typeCt, p1, p2, levelId)
-            ct.LevelOffset = LevelOffset
-            ct.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM).Set(width)
-            ct.get_Parameter(BuiltInParameter.RBS_CABLETRAY_HEIGHT_PARAM).Set(height)
+    i = 0
+    if element.LookupParameter("Смещение в начале").AsDouble() == element.LookupParameter("Смещение в конце").AsDouble():
+    
+        t = Transaction(doc, "Hor")
+        t.Start()
+        for i in range(i < count):
+            if i < count:
+                p1 = lc.Evaluate(0 + lct / (lc.Length * 304.8) * i, 1)
+                p2 = lc.Evaluate(lct / (lc.Length * 304.8) + lct / (lc.Length * 304.8) * i, 1)
+                ct = CableTray.Create(doc, typeCt, p1, p2, levelId)
+                ct.LevelOffset = LevelOffset
+                ct.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM).Set(width)
+                ct.get_Parameter(BuiltInParameter.RBS_CABLETRAY_HEIGHT_PARAM).Set(height)
+                print(str(p1) + "_" + str(p2))
+                #if round(ct.ConnectorManager.Connectors.Origin.GetLength()) == round(p1.GetLength()):
+                    #print(ct.ConnectorManager.Connectors.Origin.GetLength())
+                #listC.append()
+                #listC.append()
+                
+            if i == count - 1:
+                p1 = lc.Evaluate(lct / (lc.Length * 304.8) + lct / (lc.Length * 304.8) * i, 1)
+                p2 = lc.Evaluate(1, 1)
+                ct = CableTray.Create(doc, typeCt, p1, p2, levelId)
+                ct.LevelOffset = LevelOffset
+                ct.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM).Set(width)
+                ct.get_Parameter(BuiltInParameter.RBS_CABLETRAY_HEIGHT_PARAM).Set(height)
+                #listC.append()
+                #listC.append()
+            print(i)
+            i += 1
 
-    #t.Commit()
+        #for i in range(i < (listC.Count - 2) / 2):
+        t.Commit()
+    
+    else:
+        t = Transaction(doc, "Vert")
+        t.Start()
+        for i in range(i < count):
+            if i < count:
+                p1 = lc.Evaluate(0 + lct / (lc.Length * 304.8) * i, 1)
+                p2 = lc.Evaluate(lct / (lc.Length * 304.8) + lct / (lc.Length * 304.8) * i, 1)
+                ct = CableTray.Create(doc, typeCt, p1, p2, levelId)
+                ct.LevelOffset = LevelOffset
+                ct.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM).Set(width)
+                ct.get_Parameter(BuiltInParameter.RBS_CABLETRAY_HEIGHT_PARAM).Set(height)
+                print(str(p1) + "_" + str(p2))
+                
+                #listC.append()
+                #listC.append()
+                
+            if i == count - 1:
+                p1 = lc.Evaluate(lct / (lc.Length * 304.8) + lct / (lc.Length * 304.8) * i, 1)
+                p2 = lc.Evaluate(1, 1)
+                ct = CableTray.Create(doc, typeCt, p1, p2, levelId)
+                ct.LevelOffset = LevelOffset
+                ct.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM).Set(width)
+                ct.get_Parameter(BuiltInParameter.RBS_CABLETRAY_HEIGHT_PARAM).Set(height)
+                
+                #listC.append()
+                #listC.append()
+            print(i)
+            i += 1
+        t.Commit()
 
 # try:
 #     v1 = element.Name.index("L=")
